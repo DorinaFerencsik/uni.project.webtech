@@ -1,0 +1,85 @@
+img {
+    width: 20%;
+    height: 20%;
+    padding: 40px;
+}
+/* HEADER */
+#header {
+    display: flex;
+    padding: 30px 0;
+    background-color: rgb(119, 26, 42);
+}
+#header .header-option {
+    padding: 20px 30px;
+    background-color: dimgrey;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    margin: 0 auto;
+}
+#header .header-option a {
+    color: white;
+    text-weight: bold;
+}
+#header .header-option:hover {
+    background-color: gray;
+}
+#header .header-option a:visited {
+    color: white;
+}
+/* CONTENT */
+ #content {
+    display: flex;
+    min-height: 670px;
+}
+#content .side-ct {
+    background-image: linear-gradient(rgb(119, 26, 42),lightyellow);
+    width: 15%;
+}
+#content-ct {
+    width: 70%;
+    padding: 40px;
+    background-color: lightyellow;
+}
+#content-ct .title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+#content-ct .main-box {
+    display: flex;
+}
+#content-ct .main-box table {
+    padding: 40px;
+}
+#content-ct .main-box .sponsore {
+    padding: 40px;
+}
+
+#cars .color .tooltip {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+#cars .color:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* FOOTER */
+#footer {
+    height: 80px;
+    padding-top: 40px;
+    text-align: center;
+    background: dimgray;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    font-weight: bold;
+}
