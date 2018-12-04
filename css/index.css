@@ -1,7 +1,27 @@
-img {
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+img.manufact-img {
+    float: left;
+    width: 30%;
+    padding: 0 40px 30px 0;
+}
+img.car-img {
+    float: right;
     width: 20%;
-    height: 20%;
-    padding: 40px;
+    padding: 0 0 30px 40px;
+}
+p.success {
+    color: #3ebb0c;
+    text-decoration: underline;
+    font-weight: bold;
+}
+p.error {
+    color: #ff2626;
+    text-decoration: underline;
+    font-weight: bold;
 }
 /* HEADER */
 #header {
@@ -55,7 +75,6 @@ img {
 #content-ct .main-box .sponsore {
     padding: 40px;
 }
-
 #cars .color .tooltip {
     visibility: hidden;
     background-color: #555;
@@ -70,6 +89,40 @@ img {
 #cars .color:hover .tooltip {
     visibility: visible;
     opacity: 1;
+}
+.manufacturer-ct {
+    margin-bottom: 70px;
+}
+.manufacturer-ct table, .manufacturer-ct th, .manufacturer-ct td,
+.car-ct table, .car-ct th, .car-ct td{
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.manufacturer-ct th,
+.car-ct th{
+    background: #797878ad;
+    border-color: white;
+    width: 4rem;
+    height: 2rem;
+
+}
+.manufacturer-ct td,
+.car-ct td {
+    width: 260px;
+    height: 32px;
+}
+
+#add-manufact-ct table, #add-manufact-ct th, #add-manufact-ct td,
+#add-car-ct table, #add-car-ct th, #add-car-ct td{
+    border: none;
+}
+
+#add-manufact-ct button,
+#add-car-ct button {
+    height: 35px;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
 }
 
 /* FOOTER */
