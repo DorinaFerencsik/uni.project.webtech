@@ -23,11 +23,12 @@ function packManufacturers() {
     manufactTable.append(tableHeadCt);
     getManufacturers();
 
+    var manufactTitle = $('<div/>').append($('<h2/>').html('Manufacturers'));
     var manufactImg = $('<img/>').attr('src','images/manufacturer.jpg').addClass('manufact-img');
-    // https://www.cc.com.mt/wp-content/uploads/2013/04/car-manufacturer.jpg
+    var macufactCarsCt = $('<div/>').addClass('manufacturer-cars-ct')
     var manufactCt = $('<div/>').addClass('manufacturer-ct');
 
-    manufactCt.append(manufactImg).append(manufactTable);
+    manufactCt.append(manufactTitle).append(manufactImg).append(manufactTable).append(macufactCarsCt);
 
     $('#content-ct').append(manufactCt);
 
@@ -42,6 +43,9 @@ function getManufacturers() {
             var tableRow = $('<tr/>');
             $.each(response[i], function (key, value) {
                 var tableCell = $('<td/>').html(value);
+                if(key == 'name') {
+                    tableCell.click($.proxy(showCarsForManufacturer, this, value));
+                }
                 tableRow.append(tableCell);
             });
             $('#manufacturers').append(tableRow);
@@ -50,26 +54,36 @@ function getManufacturers() {
         console.error('Error while reading manufacturer data from server: ', error);
     });
 }
-function packCars() {
-    var headName = $('<th/>').html('Name');
-    var headConsumption = $('<th/>').html('Consumption');
-    var headColor = $('<th/>').html('Color');
-    var headManufact = $('<th/>').html('Manufacturer');
-    var headAvailable = $('<th/>').html('Available');
-    var headYear = $('<th/>').html('Year');
-    var headHP = $('<th/>').html('Horsepower');
-    var tableHeadCt = $('<tr/>').addClass('car-head');
-    var carTable = $('<table/>').attr('id','cars');
+function showCarsForManufacturer(manufacturer) {
+    console.log(manufacturer);
+    document.cookie="name=" + manufacturer;
+    var request = {
+        method: 'GET',
+        url: '/manufacturer'
+    };
+    $.ajax(request).done(function (response) {
+        console.log(response);
+        $('.manufacturer-cars-ct').empty();
+        var clearButton = $('<button/>').html('X');
+        clearButton.click($.proxy(clearManufacturerCars));
+        $('.manufacturer-cars-ct').append(clearButton);
+        createCarTable(response, 'manufacturer-cars-ct')
+    }).fail(function (error) {
+        console.error('Error while getting cars of ', manufacturer, '. Error: ', error);
+    })
+}
+function clearManufacturerCars() {
+    $('.manufacturer-cars-ct').empty();
+}
 
-    tableHeadCt.append(headName).append(headConsumption).append(headColor).append(headManufact).append(headAvailable).append(headYear).append(headHP);
-    carTable.append(tableHeadCt);
+function packCars() {
     getCars();
 
+    var carTitle = $('<div/>').append($('<h2/>').html('Cars'));
     var carImg = $('<img/>').attr('src','images/cars.jpg').addClass('car-img');
-    // https://upload.wikimedia.org/wikipedia/en/thumb/3/34/Cars_2006.jpg/220px-Cars_2006.jpg
     var carCt = $('<div/>').addClass('car-ct');
 
-    carCt.append(carImg).append(carTable);
+    carCt.append(carTitle).append(carImg);
 
     $('#content-ct').append(carCt);
 
@@ -80,24 +94,43 @@ function getCars() {
         url: '/cars'
     };
     $.ajax(request).done(function (response) {
-        for (var i  = 0; i < response.length; i++) {
-            var tableRow = $('<tr/>');
-            $.each(response[i], function (key, value) {
-                var tableCell = $('<td/>');
-                if (key == 'color') {
-                    tableCell.css('background-color', value.toLowerCase()).addClass('color');
-                    var colorTooltip = $('<span/>').addClass('tooltip').html(value.toLowerCase())
-                    tableCell.append(colorTooltip);
-                } else {
-                    tableCell.html(value);
-                }
-                tableRow.append(tableCell);
-            });
-            $('#cars').append(tableRow);
-        }
+        createCarTable(response, 'car-ct')
     }).fail(function (error) {
         console.error('Error while reading manufacturer data from server: ', error);
     });
+}
+function createCarTable(cars, containerClass) {
+    var headName = $('<th/>').html('Name');
+    var headManufact = $('<th/>').html('Manufacturer');
+    var headConsumption = $('<th/>').html('Consumption');
+    var headColor = $('<th/>').html('Color');
+    var headAvailable = $('<th/>').html('Available');
+    var headYear = $('<th/>').html('Year');
+    var headHP = $('<th/>').html('Horsepower');
+    var tableHeadCt = $('<tr/>').addClass('car-head');
+    var table = $('<table/>').attr('id','cars');
+    tableHeadCt.append(headName).append(headManufact).append(headConsumption).append(headColor).append(headAvailable).append(headYear).append(headHP);
+    table.append(tableHeadCt);
+
+    $.each(cars, function (key, value) {
+        var row = $('<tr/>');
+        var nameCell = $('<td/>').html(value.name);
+        var consumptionCell = $('<td>' + value.consumption + '</td>');
+        var colorCell = $('<td/>').css('background-color', value.color.toLowerCase()).addClass('color');
+        var colorTooltip = $('<span/>').addClass('tooltip').html(value.color.toLowerCase())
+        colorCell.append(colorTooltip);
+        var manufacturerCell = $('<td/>').html(value.manufacturer);
+        var availableCell = $('<td/>').html(value.available);
+        var yearCell = $('<td/>').html(value.year);
+        var horsepowerCell = $('<td/>').html(value.horsepower);
+
+        row.append(nameCell, consumptionCell, colorCell, manufacturerCell,
+            availableCell, yearCell, horsepowerCell);
+        table.append(row);
+    });
+    $('.'+containerClass).append(table);
+
+
 }
 
 function addManufacturerPage() {
@@ -222,11 +255,12 @@ function addCarForm() {
     colorCt.append(colorTitle).append(colorInputCt);
 
     var manufactTitle = $('<td>').html('Manufacturer');
-    var manufactInput = $('<input/>').attr('type', 'text').attr('name','manufacturer').attr('required','required');
+    var manufactInput = $('<select/>').attr('name','manufacturer').attr('id','add-car-select-manufact').attr('required', 'required');
     var manufactInputCt = $('<td/>');
     var manufactCt = $('<tr/>');
     manufactInputCt.append(manufactInput);
     manufactCt.append(manufactTitle).append(manufactInputCt);
+    getManufacturerNames();
 
     var availableTitle = $('<td>').html('Available');
     var availableInput = $('<input/>').attr('type','number').attr('name','available').attr('required', 'required');
@@ -267,13 +301,28 @@ function addCarForm() {
     manufactForm.append(table);
     return manufactForm;
 }
+function getManufacturerNames() {
+    var request = {
+        method: 'GET',
+        url: '/manufacturerNames'
+    };
+    $.ajax(request).done(function (respone) {
+        for (var i = 0; i < respone.length; i++) {
+            var option = $('<option/>').attr('value',respone[i]).html(respone[i]);
+            $('#add-car-select-manufact').append(option);
+        }
+    }).fail(function (error) {
+        console.log('Error while reading manufacturer names from server: ',error);
+    })
+
+}
 function addCarClick() {
     if ($('#add-car-form')[0].checkValidity()) {
         var datas = {
             name: $('input[name=name]').val(),
-            consumption: $('input[name=consumption]').val(),
+            consumption: $('input[name=consumption]').val()+'l/100km',
             color: $('input[name=color]').val(),
-            manufacturer: $('input[name=manufacturer]').val(),
+            manufacturer: $('select[name=manufacturer]').val(),
             available: $('input[name=available]').val(),
             year: $('select[name=year]').val(),
             horsepower: $('input[name=power]').val()
