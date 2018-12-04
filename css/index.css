@@ -17,49 +17,52 @@ p.success {
     color: #3ebb0c;
     text-decoration: underline;
     font-weight: bold;
+    text-align: center;
 }
 p.error {
     color: #ff2626;
     text-decoration: underline;
     font-weight: bold;
+    text-align: center;
 }
-/* HEADER */
+
 #header {
-    display: flex;
-    padding: 30px 0;
-    background-color: rgb(119, 26, 42);
+    background-color: #771929;
+    width: auto;
+    height: 40px;
+    padding: 30px;
 }
-#header .header-option {
-    padding: 20px 30px;
-    background-color: dimgrey;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    border-radius: 30px;
-    margin: 0 auto;
+#header .header-ct {
+    float: left;
 }
-#header .header-option a {
-    color: white;
-    text-weight: bold;
+#header .header-ct button  {
+    height: 35px;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: #696969;
+    font-weight: bold;
 }
-#header .header-option:hover {
-    background-color: gray;
+#header .header-ct button:hover {
+    color: #771929;
+    background-color: #dddddd;
 }
-#header .header-option a:visited {
-    color: white;
-}
-/* CONTENT */
+
+
+
  #content {
     display: flex;
-    min-height: 670px;
+    min-height: 587px;
 }
 #content .side-ct {
-    background-image: linear-gradient(rgb(119, 26, 42),lightyellow);
+    background-image: linear-gradient(#771929,#ffffe0);
     width: 15%;
 }
 #content-ct {
     width: 70%;
     padding: 40px;
-    background-color: lightyellow;
+    background-color: #ffffe0;
 }
 #content-ct .title {
     text-align: center;
@@ -102,8 +105,9 @@ p.error {
 .car-ct th{
     background: #797878ad;
     border-color: white;
-    width: 4rem;
-    height: 2rem;
+    width: 260px;
+    height: 32px;
+     color: #ffffff;
 
 }
 .manufacturer-ct td,
@@ -111,12 +115,35 @@ p.error {
     width: 260px;
     height: 32px;
 }
+.manufacturer-ct .manufacturer-cars-ct button {
+    font-weight: bold;
+    border: none;
+    width: 25px;
+    height: 25px;
+}
 
 #add-manufact-ct table, #add-manufact-ct th, #add-manufact-ct td,
 #add-car-ct table, #add-car-ct th, #add-car-ct td{
     border: none;
 }
-
+#add-manufact-ct .basic-input,
+#add-car-ct .basic-input {
+    width: 80%;
+    margin: 0 auto;
+}
+#add-manufact-ct .basic-input input,
+#add-car-ct .basic-input input {
+    width: 360px;
+    height: 28px;
+    border: solid 1px #cacaca;
+    padding-left: 10px;
+}
+#add-manufact-ct .basic-input select,
+#add-car-ct .basic-input select {
+    width: 372px;
+    height: 32px;
+    padding: 0;;
+}
 #add-manufact-ct button,
 #add-car-ct button {
     height: 35px;
@@ -125,14 +152,23 @@ p.error {
     padding: 10px 20px;
 }
 
-/* FOOTER */
+
 #footer {
-    height: 80px;
-    padding-top: 40px;
+    height: auto;
+    padding: 40px;
     text-align: center;
     background: dimgray;
     color: white;
     font-size: 16px;
     font-weight: bold;
-    font-weight: bold;
+}
+#footer a {
+    color: #771929;
+    text-decoration: none;
+}
+#footer a:hover{
+    color: #ffffff;
+}
+#footer a:visited{
+    color: #ffffe0;
 }
