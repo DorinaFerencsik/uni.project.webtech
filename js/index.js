@@ -1,56 +1,14 @@
 $( document ).ready(function() {
     console.log( "ready!" );
     homePage();
-    $('#navigation-home').click($.proxy(onNavigationHomeClick, this));
-    $('#navigation-manufacturer').click($.proxy(onNavigationManufacturerClick, this));
-    $('#navigation-car').click($.proxy(onNavigationCarClick, this));
+    $('#navigation-home').click($.proxy(homePage, this));
+    $('#navigation-manufacturer').click($.proxy(addManufacturerPage, this));
+    $('#navigation-car').click($.proxy(addCarPage, this));
 
 
 });
 function homePage() {
-// <div class="title">Welcome here</div>
-//     <div class="manufacturer-ct">
-//         <img src="images/manufacturer.jpg">
-//         <!--http://www.theaiatrust.com/wp-content/uploads/2016/01/02-manufacturer-provided-information.jpg-->
-// <div>
-//     <table id="manufacturers">
-//         <tr>
-//         <th>Name</th>
-//         <th>Country</th>
-//         <th>Founded</th>
-//         </tr>
-//         </table>
-//         </div>
-//         </div>
-//         <div class="car-ct">
-//         <div>
-//         <table id="cars">
-//         <tr>
-//         <th>Name</th>
-//         <th>Consumption</th>
-//         <th>Color</th>
-//         <th>Manufacturer</th>
-//         <th>Available</th>
-//         <th>Year</th>
-//         <th>Horsepower</th>
-//         </tr>
-//         </table>
-//         </div>
-//         <img src="images/cars.jpg">
-//         <!--https://upload.wikimedia.org/wikipedia/en/thumb/3/34/Cars_2006.jpg/220px-Cars_2006.jpg-->
-//     <!--<div class="sponsore">-->
-// <!--<div class="sub-title">Sponsored by</div>-->
-//     <!--<ul>-->
-//     <!--<li>Webstorm</li>-->
-//     <!--<li>Github</li>-->
-//     <!--<li>Coffee</li>-->
-//     <!--</ul>-->
-//     <!--<ol>-->
-//     <!--<li>blala</li>-->
-//     <!--<li>Tea</li>-->
-//     <!--</ol>-->
-//     <!--</div>-->
-//     </div>
+    $('#content-ct').empty();
     packManufacturers();
     packCars();
 }
@@ -65,7 +23,8 @@ function packManufacturers() {
     manufactTable.append(tableHeadCt);
     getManufacturers();
 
-    var manufactImg = $('<img/>').attr('src','images/manufacturer.jpg');
+    var manufactImg = $('<img/>').attr('src','images/manufacturer.jpg').addClass('manufact-img');
+    // https://www.cc.com.mt/wp-content/uploads/2013/04/car-manufacturer.jpg
     var manufactCt = $('<div/>').addClass('manufacturer-ct');
 
     manufactCt.append(manufactImg).append(manufactTable);
@@ -106,7 +65,8 @@ function packCars() {
     carTable.append(tableHeadCt);
     getCars();
 
-    var carImg = $('<img/>').attr('src','images/cars.jpg');
+    var carImg = $('<img/>').attr('src','images/cars.jpg').addClass('car-img');
+    // https://upload.wikimedia.org/wikipedia/en/thumb/3/34/Cars_2006.jpg/220px-Cars_2006.jpg
     var carCt = $('<div/>').addClass('car-ct');
 
     carCt.append(carImg).append(carTable);
@@ -140,12 +100,204 @@ function getCars() {
     });
 }
 
-function onNavigationHomeClick() {
-    console.log('Home click');
+function addManufacturerPage() {
+    $('#content-ct').empty();
+
+    var manufactTitle = $('<h2/>').html('Add new manufacturer');
+    var manufactTitleCt = $('<div/>');
+
+    manufactTitleCt.append(manufactTitle);
+
+    var manufactFormCt = $('<div/>').attr('id','add-manufact-ct');
+    manufactFormCt.append(addManufacturerForm());
+
+    $('#content-ct').append(manufactTitleCt).append(manufactFormCt);
 }
-function onNavigationManufacturerClick() {
-    console.log('Manufact click');
+function addManufacturerForm() {
+    var nameTitle = $('<td>').html('Name');
+    var nameInput = $('<input/>').attr('type', 'text').attr('name','name').attr('required','required');
+    var nameInputCt = $('<td/>');
+    var nameCt = $('<tr/>');
+    nameInputCt.append(nameInput);
+    nameCt.append(nameTitle).append(nameInputCt);
+
+    var countryTitle = $('<td>').html('Country');
+    var countries = ['Austria','Azerbaijan','Belgium','Brazil','Bulgaria','Czech','France','Germany','Japan','Korea','Mexico','Nigeria','USA','Turkey']
+    var countryInput = $('<select/>').attr('required', 'required').attr('name','country');
+    var countryInputCt = $('<td/>');
+    var countryCt = $('<tr/>');
+    for (var i = 0; i<countries.length; i++) {
+        var option = $('<option/>').attr('value',countries[i]).html(countries[i]);
+        countryInput.append(option);
+    }
+    countryInputCt.append(countryInput);
+    countryCt.append(countryTitle).append(countryInputCt);
+
+    var foundTitle = $('<td>').html('Founded');
+    var foundInput = $('<input/>').attr('type', 'date').attr('name','founded').attr('required','required');;
+    var foundInputCt = $('<td/>');
+    var foundCt = $('<tr/>');
+    foundInputCt.append(foundInput);
+    foundCt.append(foundTitle).append(foundInputCt);
+
+    var submitButton = $('<button/>').attr('type','button').addClass('submit-button').html('Add manufacturer');
+    submitButton.click($.proxy(addManufacturerClick));
+    var submitButtonCt = $('<td/>');
+    var submitCt = $('<tr/>');
+    submitButtonCt.append(submitButton);
+    submitCt.append(submitButtonCt);
+
+    var table = $('<table/>').addClass('basic-input');
+    var manufactForm = $('<form/>').attr('id','add-manufact-form');
+
+    table.append(nameCt).append(countryCt).append(foundCt).append(submitButton);
+    manufactForm.append(table);
+    return manufactForm;
 }
-function onNavigationCarClick() {
-    console.log('Car click');
+function addManufacturerClick() {
+    if ($('#add-manufact-form')[0].checkValidity()) {
+        console.log('Add manufact call')
+        var datas = {
+            name: $('input[name=name]').val(),
+            country: $('select[name=country]').val(),
+            founded: $('input[name=founded]').val()
+        };
+        var request = {
+            method: 'POST',
+            url: '/addManufacturers',
+            data: datas
+        };
+        $.ajax(request).done(function (response) {
+            var successMessage = $('<p/>').addClass('success').html('Manufacturer added successfully.');
+            $('#add-manufact-ct').append(successMessage);
+
+        }).fail(function (error) {
+            var errorMessage = $('<p/>').addClass('error');
+            if (error.status == 409) {
+                errorMessage.html('Manufacturer with name '+$('input[name=name]').val()+' already exist. Please use unique names.');
+            } else {
+                errorMessage.html('Something went wrong. Please try again later');
+            }
+            $('#add-manufact-ct').append(errorMessage);
+        });
+    } else {
+        var errorMessage = $('<p/>').addClass('error').html('Please fill every form correctly.')
+        $('#add-manufact-ct').append(errorMessage);
+    }
+}
+
+function addCarPage() {
+    $('#content-ct').empty();
+
+    var carTitle = $('<h2/>').html('Add new car');
+    var carTitleCt = $('<div/>');
+
+    carTitleCt.append(carTitle);
+
+    var carFormCt = $('<div/>').attr('id','add-car-ct');
+    carFormCt.append(addCarForm());
+
+    $('#content-ct').append(carTitleCt).append(carFormCt);
+}
+function addCarForm() {
+    var nameTitle = $('<td>').html('Name');
+    var nameInput = $('<input/>').attr('type', 'text').attr('name','name').attr('required','required');
+    var nameInputCt = $('<td/>');
+    var nameCt = $('<tr/>');
+    nameInputCt.append(nameInput);
+    nameCt.append(nameTitle).append(nameInputCt);
+
+    var consumptionTitle = $('<td>').html('Consumption (liter / 100km)');
+    var consumptionInput = $('<input/>').attr('type','number').attr('name','consumption').attr('required', 'required');
+    var consumptionInputCt = $('<td/>');
+    var consumptionCt = $('<tr/>');
+    consumptionInputCt.append(consumptionInput);
+    consumptionCt.append(consumptionTitle).append(consumptionInputCt);
+
+    var colorTitle = $('<td>').html('Color');
+    var colorInput = $('<input/>').attr('type', 'color').attr('name','color').attr('required','required');;
+    var colorInputCt = $('<td/>');
+    var colorCt = $('<tr/>');
+    colorInputCt.append(colorInput);
+    colorCt.append(colorTitle).append(colorInputCt);
+
+    var manufactTitle = $('<td>').html('Manufacturer');
+    var manufactInput = $('<input/>').attr('type', 'text').attr('name','manufacturer').attr('required','required');
+    var manufactInputCt = $('<td/>');
+    var manufactCt = $('<tr/>');
+    manufactInputCt.append(manufactInput);
+    manufactCt.append(manufactTitle).append(manufactInputCt);
+
+    var availableTitle = $('<td>').html('Available');
+    var availableInput = $('<input/>').attr('type','number').attr('name','available').attr('required', 'required');
+    var availableInputCt = $('<td/>');
+    var availableCt = $('<tr/>');
+    availableInputCt.append(availableInput);
+    availableCt.append(availableTitle).append(availableInputCt);
+
+    var yearTitle = $('<td>').html('Year');
+    var yearInput = $('<select/>').attr('name','year').attr('required', 'required');
+    var yearInputCt = $('<td/>');
+    var yearCt = $('<tr/>');
+    for (var i = 1900; i<2019; i++) {
+        var option = $('<option/>').attr('value',i).html(i);
+        yearInput.append(option);
+    }
+    yearInputCt.append(yearInput);
+    yearCt.append(yearTitle).append(yearInputCt);
+
+    var powerTitle = $('<td>').html('Horsepower');
+    var powerInput = $('<input/>').attr('type', 'number').attr('name','power').attr('required','required');;
+    var powerInputCt = $('<td/>');
+    var powerCt = $('<tr/>');
+    powerInputCt.append(powerInput);
+    powerCt.append(powerTitle).append(powerInputCt);
+
+    var submitButton = $('<button/>').attr('type','button').addClass('submit-button').html('Add car');
+    submitButton.click($.proxy(addCarClick));
+    var submitButtonCt = $('<td/>');
+    var submitCt = $('<tr/>');
+    submitButtonCt.append(submitButton);
+    submitCt.append(submitButtonCt);
+
+    var table = $('<table/>').addClass('basic-input');
+    var manufactForm = $('<form/>').attr('id','add-car-form');
+
+    table.append(nameCt).append(consumptionCt).append(colorCt).append(manufactCt).append(availableCt).append(yearCt).append(powerCt).append(submitButton);
+    manufactForm.append(table);
+    return manufactForm;
+}
+function addCarClick() {
+    if ($('#add-car-form')[0].checkValidity()) {
+        var datas = {
+            name: $('input[name=name]').val(),
+            consumption: $('input[name=consumption]').val(),
+            color: $('input[name=color]').val(),
+            manufacturer: $('input[name=manufacturer]').val(),
+            available: $('input[name=available]').val(),
+            year: $('select[name=year]').val(),
+            horsepower: $('input[name=power]').val()
+        };
+        var request = {
+            method: 'POST',
+            url: '/addCar',
+            data: datas
+        };
+        $.ajax(request).done(function (response) {
+            var successMessage = $('<p/>').addClass('success').html('Car added successfully.');
+            $('#add-car-ct').append(successMessage);
+
+        }).fail(function (error) {
+            var errorMessage = $('<p/>').addClass('error');
+            if (error.status == 409) {
+                errorMessage.html('Car with name '+$('input[name=name]').val()+' already exist. Please use unique names.');
+            } else {
+                errorMessage.html('Something went wrong. Please try again later');
+            }
+            $('#add-car-ct').append(errorMessage);
+        });
+    } else {
+        var errorMessage = $('<p/>').addClass('error').html('Please fill every form correctly.')
+        $('#add-car-ct').append(errorMessage);
+    }
 }
